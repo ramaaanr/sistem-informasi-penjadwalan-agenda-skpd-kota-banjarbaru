@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +15,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    if (session()->get('user') == null) return redirect()->route('form-login');
+    return view('pages.index');
+})->name('home');
+
+Route::controller(UserController::class)->group(function () {
+    Route::post('/login', 'doLogin')->name('do-login');
+    Route::get('/login', 'formLogin')->name('form-login');
 });
