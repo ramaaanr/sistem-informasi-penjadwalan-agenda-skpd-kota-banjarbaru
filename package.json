@@ -31,6 +31,7 @@
   },
   "homepage": "https://github.com/ramaaanr/sistem-informasi-penjadwalan-agenda-skpd-kota-banjarbaru#readme",
   "dependencies": {
+    "flowbite": "^2.2.1",
     "fullcalendar": "^6.1.10",
     "jquery": "^3.7.1",
     "sweetalert2": "^11.10.1"

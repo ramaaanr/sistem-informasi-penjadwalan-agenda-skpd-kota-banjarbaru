@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EventController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,8 +17,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     if (session()->get('user') == null) return redirect()->route('form-login');
-    return view('pages.index');
-})->name('home');
+    return redirect()->route('home');
+});
+
+Route::controller(EventController::class)->group(function () {
+    Route::get('/', 'showCalendar')->name('home');
+    Route::get('/events-by-date', 'getEventsByDate')->name('event-by-date');
+    Route::get('/detail-event', 'getDetailEvent')->name('detail-event');
+});
 
 Route::controller(UserController::class)->group(function () {
     Route::post('/login', 'doLogin')->name('do-login');
