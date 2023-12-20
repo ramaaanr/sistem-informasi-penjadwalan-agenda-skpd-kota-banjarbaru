@@ -12,6 +12,7 @@ class UserController extends Controller
     // Fungsi untuk memproses login
     public function doLogin(Request $request)
     {
+
         $username = $request['username'];
         $password = $request['password'];
         $isLoginSuccess = false;
@@ -39,6 +40,7 @@ class UserController extends Controller
     // Fungsi untuk form login
     public function formLogin(Request $request)
     {
+        if (session()->get('user') != null) return redirect()->route('home');
         return view('pages.login');
     }
 }

@@ -1,4 +1,4 @@
-@extends('layouts.index')
+@extends('layouts.guest')
 
 @section('content')
 @if (Session::has('error'))
