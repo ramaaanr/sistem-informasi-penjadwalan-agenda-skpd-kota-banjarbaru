@@ -143,4 +143,9 @@ class EventController extends Controller
         Event::find($id)->delete();
         return response()->json(['message' => 'Event deleted successfully']);
     }
+
+    public function showPrintPdf(Request $request)
+    {
+        return view('pages.print_pdf');
+    }
 }

@@ -29,6 +29,7 @@ Route::controller(EventController::class)->group(function () {
     Route::get('/edit-event', 'showFormEditEvent')->name('show-edit-event');
     Route::post('/edit-event', 'editEvent')->name('edit-event');
     Route::delete('/delete-event', 'deleteEvent')->name('delete-event');
+    Route::get('/print-pdf', 'showPrintPdf')->name('show-print-pdf');
 });
 
 Route::controller(UserController::class)->group(function () {
