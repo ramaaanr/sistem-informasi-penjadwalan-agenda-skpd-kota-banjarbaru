@@ -91,4 +91,49 @@ class EventController extends Controller
 
         return redirect()->back();
     }
+    public function showFormEditEvent(Request $request)
+    {
+        $id = $request->query('id');
+
+        try {
+            $event = Event::find($id);
+            if ($event) {
+                return view('pages.edit_event', [
+                    'id' => $id,
+                    'title' => $event->title,
+                    'tempat' => $event->tempat,
+                    'dihadiri' => $event->dihadiri,
+                    'pakaian' => $event->pakaian,
+                    'keterangan' => $event->keterangan,
+                    'start_event' => $event->start_event,
+                ]);
+            } else {
+                abort(404);
+            }
+        } catch (QueryException $th) {
+            abort(404);
+        }
+    }
+
+    public function editEvent(Request $request)
+    {
+        $id = $request->query('id');
+
+        try {
+            Event::where('id', $id)->update([
+                'title' => $request->input('title'),
+                'tempat' => $request->input('tempat'),
+                'dihadiri' => $request->input('dihadiri'),
+                'pakaian' => $request->input('pakaian'),
+                'keterangan' => $request->input('keterangan'),
+                'start_event' => $request->input('start_event'),
+                'end_event' => "",
+            ]);
+            Session::flash('success', 'Data Berhasil Diupdate');
+        } catch (QueryException $th) {
+            Session::flash('error', 'Data Gagal Diupdate: ' + $th);
+        }
+
+        return redirect()->back();
+    }
 }

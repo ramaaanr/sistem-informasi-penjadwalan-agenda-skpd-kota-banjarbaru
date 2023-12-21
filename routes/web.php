@@ -26,6 +26,8 @@ Route::controller(EventController::class)->group(function () {
     Route::get('/detail-event', 'getDetailEvent')->name('detail-event');
     Route::get('/add-event', 'showFormAddEvent')->name('show-add-event');
     Route::post('/add-event', 'storeEvent')->name('store-event');
+    Route::get('/edit-event', 'showFormEditEvent')->name('show-edit-event');
+    Route::post('/edit-event', 'editEvent')->name('edit-event');
 });
 
 Route::controller(UserController::class)->group(function () {
