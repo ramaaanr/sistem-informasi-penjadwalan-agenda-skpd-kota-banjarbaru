@@ -136,4 +136,11 @@ class EventController extends Controller
 
         return redirect()->back();
     }
+    public function deleteEvent(Request $request)
+    {
+        $id = $request->query('id');
+
+        Event::find($id)->delete();
+        return response()->json(['message' => 'Event deleted successfully']);
+    }
 }
