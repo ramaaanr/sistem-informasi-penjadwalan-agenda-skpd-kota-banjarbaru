@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use Carbon\Carbon;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class EventController extends Controller
 {
@@ -63,5 +65,30 @@ class EventController extends Controller
             'tanggal' => $tanggal->isoFormat('dddd, D MMMM YYYY'),
             'waktu' => $tanggal->isoFormat('h:m'),
         ]);
+    }
+
+    public function showFormAddEvent(Request $request)
+    {
+        return view('pages.store_event');
+    }
+
+    public function storeEvent(Request $request)
+    {
+        try {
+            Event::create([
+                'title' => $request->input('title'),
+                'tempat' => $request->input('tempat'),
+                'dihadiri' => $request->input('dihadiri'),
+                'pakaian' => $request->input('pakaian'),
+                'keterangan' => $request->input('keterangan'),
+                'start_event' => $request->input('start_event'),
+                'end_event' => "",
+            ]);
+            Session::flash('success', 'Data Berhasil Dimasukkan');
+        } catch (QueryException $th) {
+            Session::flash('error', 'Data Gagal Dimasukkan: ' + $th);
+        }
+
+        return redirect()->back();
     }
 }

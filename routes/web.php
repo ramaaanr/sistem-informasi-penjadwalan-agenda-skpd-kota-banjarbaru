@@ -24,6 +24,8 @@ Route::controller(EventController::class)->group(function () {
     Route::get('/', 'showCalendar')->name('home');
     Route::get('/events-by-date', 'getEventsByDate')->name('event-by-date');
     Route::get('/detail-event', 'getDetailEvent')->name('detail-event');
+    Route::get('/add-event', 'showFormAddEvent')->name('show-add-event');
+    Route::post('/add-event', 'storeEvent')->name('store-event');
 });
 
 Route::controller(UserController::class)->group(function () {
