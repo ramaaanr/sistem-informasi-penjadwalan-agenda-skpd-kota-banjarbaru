@@ -17,9 +17,9 @@ return new class extends Migration
             $table->string('tempat', 100)->nullable(false);
             $table->string('dihadiri', 100)->nullable(false);
             $table->string('pakaian', 100)->nullable(false);
-            $table->dateTime('start_event')->nullable(false);;
-            $table->dateTime('end_event')->nullable(true);;
-            $table->string('keterangan')->nullable(false);;
+            $table->dateTime('start_event')->nullable(false);
+            $table->dateTime('end_event')->nullable(true);
+            $table->string('keterangan')->nullable(false);
         });
     }
 
