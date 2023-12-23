@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use Carbon\Carbon;
+use Carbon\Exceptions\InvalidFormatException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -82,7 +83,6 @@ class EventController extends Controller
                 'pakaian' => $request->input('pakaian'),
                 'keterangan' => $request->input('keterangan'),
                 'start_event' => $request->input('start_event'),
-                'end_event' => "",
             ]);
             Session::flash('success', 'Data Berhasil Dimasukkan');
         } catch (QueryException $th) {
@@ -127,7 +127,6 @@ class EventController extends Controller
                 'pakaian' => $request->input('pakaian'),
                 'keterangan' => $request->input('keterangan'),
                 'start_event' => $request->input('start_event'),
-                'end_event' => "",
             ]);
             Session::flash('success', 'Data Berhasil Diupdate');
         } catch (QueryException $th) {
@@ -147,5 +146,47 @@ class EventController extends Controller
     public function showPrintPdf(Request $request)
     {
         return view('pages.print_pdf');
+    }
+
+    public function getEventByDateRange(Request $request)
+    {
+        try {
+            // Mengonversi string tanggal menjadi objek Carbon
+            $mulaiTanggal = Carbon::createFromFormat('Y-m-d', $request->input('mulai_tanggal'));
+            $sampaiTanggal = Carbon::createFromFormat('Y-m-d', $request->input('sampai_tanggal'));
+
+            // Memeriksa apakah format tanggal valid
+            if ($mulaiTanggal === false || $sampaiTanggal === false) {
+                return response()->json(['error' => true, 'message' => "Input Tanggal Belum Lengkap"], 400); // Format tanggal tidak valid
+            }
+
+            // Memeriksa apakah mulaiTanggal lebih dari sampaiTanggal
+            if ($mulaiTanggal->gt($sampaiTanggal)) {
+                // Tanggal awal lebih dari tanggal akhir
+                return response()->json(['error' => true, 'message' => "Input Sampai Tanggal harus sebelum Input Mulai Tanggal"], 400); // Format tanggal tidak valid
+            }
+
+            $events = Event::whereBetween('start_event', [$mulaiTanggal, $sampaiTanggal])->get();
+            $result = array();
+            foreach ($events as $event) {
+                $tanggal = Carbon::parse($event->start_event);
+                $tanggal->locale('id');
+                $result[] = [
+                    'id' => $event->id,
+                    'tanggal' => $event->tanggal,
+                    'tanggal' => $tanggal->isoFormat('dddd, D MMMM YYYY'),
+                    'title' => $event->title,
+                ];
+            }
+            return response()->json($result); // Tanggal valid dan urutan benar
+
+        } catch (InvalidFormatException $th) {
+            return response()->json(['error' => true, 'message' => "Input Tanggal Belum Lengkap"], 400); // Format tanggal tidak valid
+
+        }
+    }
+
+    public function downloadPdf(Request $request)
+    {
     }
 }

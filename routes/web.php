@@ -30,6 +30,8 @@ Route::controller(EventController::class)->group(function () {
     Route::post('/edit-event', 'editEvent')->name('edit-event');
     Route::delete('/delete-event', 'deleteEvent')->name('delete-event');
     Route::get('/print-pdf', 'showPrintPdf')->name('show-print-pdf');
+    Route::get('/print-pdf/unduh', 'downloadPdf')->name('download-pdf');
+    Route::get('/events-by-data-range', 'getEventByDateRange')->name('get-event-by-date-range');
 });
 
 Route::controller(UserController::class)->group(function () {
