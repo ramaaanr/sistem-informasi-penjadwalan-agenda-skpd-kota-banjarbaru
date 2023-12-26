@@ -3,7 +3,7 @@
 @section('content')
 <main id="main-content" class="bg-gray-100 ml-56 p-16 pt-8 min-h-screen">
   <div class="card-date-range rounded-md bg-white shadow-lg my-4 p-8">
-    <div class="input-date-container flex">
+    <div id="input-date-container" class="input-date-container flex">
       <div class="relative mr-4  w-full">
         <input type="date" id="mulaiTanggal"
           class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -13,7 +13,6 @@
           Tanggal
         </label>
       </div>
-
       <div class="relative w-full">
         <input type="date" id="sampaiTanggal"
           class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -24,12 +23,9 @@
         </label>
       </div>
     </div>
-    <div class="button-container mt-4">
+    <div id="button-event-container" class="button-container mt-4">
       <button type="button" id="lihatAcaraButton"
         class="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Lihat
-        Acara</button>
-      <button type="button" id="cetakAcaraButton"
-        class="text-white hidden bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Cetak
         Acara</button>
     </div>
   </div>
@@ -50,13 +46,27 @@
           </tr>
         </thead>
         <tbody class="table-body-event">
-
+          <tr>
+            <td colspan="3" class="text-center py-4">Tidak ada acara! Input Tanggal dan Lihat Jadwal</td>
+          </tr>
         </tbody>
       </table>
     </div>
   </div>
 </main>
 <script>
+function createCetakAcaraButton(mulaiTanggal, sampaiTanggal) {
+  let button = $('<button>', {
+    text: 'Cetak Acara',
+    class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800',
+    id: 'cetakAcaraButton',
+    click: function() {
+      window.location.href = `/print-pdf/unduh?mulai_tanggal=${mulaiTanggal}&sampai_tanggal=${sampaiTanggal}`;
+    },
+  });
+  return button;
+}
+
 function createDetailButton(eventId) {
   let button = $('<button>', {
     text: 'Detail',
@@ -101,7 +111,7 @@ function createDetailButton(eventId) {
 $('#lihatAcaraButton').on('click', () => {
   let mulai_tanggal = $('#mulaiTanggal').val();
   let sampai_tanggal = $('#sampaiTanggal').val();
-  $('#cetakAcaraButton').addClass('hidden');
+  $("#cetakAcaraButton").remove();
   $.ajax({
     url: 'events-by-data-range',
     type: 'GET',
@@ -110,14 +120,21 @@ $('#lihatAcaraButton').on('click', () => {
       sampai_tanggal: sampai_tanggal,
     },
     success: (events) => {
+      let buttonContainer = $('#button-event-container');
       Swal.fire({
         icon: 'success',
         title: 'Lihat Acara Berdasarkan Tanggal Berhasil',
       });
       $('#cetakAcaraButton').addClass('hidden');
-      if (events.length != 0) $('#cetakAcaraButton').removeClass('hidden');
-
       $('.table-body-event').empty();
+      if (events.length != 0) {
+        buttonContainer.append(createCetakAcaraButton(mulai_tanggal, sampai_tanggal));
+      } else {
+        $('.table-body-event').html(
+          '<tr> <td colspan = "3"class = "text-center py-4" > Tidak ada acara! Input Tanggal dan Lihat Jadwal </td> </tr>'
+        );
+      }
+
       $.each(events, function(index, event) {
         let row = $('<tr>').addClass(
           'bg-white border-t border-gray-300 hover:bg-gray-100'

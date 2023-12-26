@@ -8,6 +8,7 @@ use Carbon\Exceptions\InvalidFormatException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use PDF;
 
 class EventController extends Controller
 {
@@ -173,7 +174,6 @@ class EventController extends Controller
                 $tanggal->locale('id');
                 $result[] = [
                     'id' => $event->id,
-                    'tanggal' => $event->tanggal,
                     'tanggal' => $tanggal->isoFormat('dddd, D MMMM YYYY'),
                     'title' => $event->title,
                 ];
@@ -188,5 +188,58 @@ class EventController extends Controller
 
     public function downloadPdf(Request $request)
     {
+        try {
+            set_time_limit(500);
+            // Mengonversi string tanggal menjadi objek Carbon
+            $mulaiTanggal = Carbon::createFromFormat('Y-m-d', $request->query('mulai_tanggal'));
+            $sampaiTanggal = Carbon::createFromFormat('Y-m-d', $request->query('sampai_tanggal'));
+
+            // Memeriksa apakah format tanggal valid
+            if ($mulaiTanggal === false || $sampaiTanggal === false) {
+                abort(404);
+            }
+
+            // Memeriksa apakah mulaiTanggal lebih dari sampaiTanggal
+            if ($mulaiTanggal->gt($sampaiTanggal)) {
+                // Tanggal awal lebih dari tanggal akhir
+                abort(404);
+            }
+            $results = array();
+            // $events = Event::whereBetween('start_event', [$mulaiTanggal, $sampaiTanggal])->distinct()->pluck('start_event');
+            $uniqueDates = Event::selectRaw('DATE(start_event) as event_date')
+                ->whereBetween('start_event', [$mulaiTanggal, $sampaiTanggal])
+                ->distinct()
+                ->pluck('event_date');
+            foreach ($uniqueDates as $date) {
+                $eventResults = array();
+                $events = Event::whereDate('start_event', $date)->get();
+                foreach ($events as $event) {
+                    $tanggal = Carbon::parse($event->start_event);
+                    $tanggal->locale('id');
+                    $eventResults[] = [
+                        'id' => $event->id,
+                        'title' => $event->title,
+                        'tempat' => $event->tempat,
+                        'dihadiri' => $event->dihadiri,
+                        'pakaian' => $event->pakaian,
+                        'keterangan' => $event->keterangan,
+                        'tanggal' => $tanggal->isoFormat('dddd, D MMMM YYYY'),
+                        'waktu' => $tanggal->isoFormat('h:m'),
+                    ];
+                }
+                $tanggal = Carbon::parse($date);
+                $tanggal->locale('id');
+                $results[] = [
+                    'date' => $tanggal->isoFormat('dddd, D MMMM YYYY'),
+                    'events' => $eventResults,
+                ];
+            }
+            // $pdf = PDF::loadView();
+            // return view('pages.download_pdf', ['dateEvents' => $results]);
+            return view('pages.download_pdf', ['dateEvents' => $results]);
+            // $pdf->download();
+        } catch (InvalidFormatException $th) {
+            abort(404);
+        }
     }
 }
