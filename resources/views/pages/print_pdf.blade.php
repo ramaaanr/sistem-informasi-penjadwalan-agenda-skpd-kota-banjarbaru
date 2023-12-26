@@ -1,7 +1,7 @@
 @extends('layouts.user')
 
 @section('content')
-<main id="main-content" class="bg-gray-100 ml-56 p-16 pt-8 min-h-screen">
+<main id="main-content" class="bg-gray-100 ml-56 p-4 sm:p-8 md:p-12  lg:p-16 pt-8 min-h-screen">
   <div class="card-date-range rounded-md bg-white shadow-lg my-4 p-8">
     <div id="input-date-container" class="input-date-container flex">
       <div class="relative mr-4  w-full">

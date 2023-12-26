@@ -25,7 +25,7 @@ Swal.fire({
 });
 </script>
 @endif
-<main id="main-content" class="bg-gray-100 ml-56  p-16 pt-8 min-h-screen">
+<main id="main-content" class="bg-gray-100 ml-56 p-4 sm:p-8 md:p-12  lg:p-16 pt-8 min-h-screen">
   <form class="py-4 px-8 bg-white rounded-md shadow-md" action="/add-event" method="post">
     @csrf
     <h1 class="mb-4  text-4xl text-center font-extrabold leading-none tracking-tight text-blue-500 ">
