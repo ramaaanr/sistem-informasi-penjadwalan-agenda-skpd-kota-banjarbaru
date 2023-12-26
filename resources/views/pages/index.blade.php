@@ -25,7 +25,9 @@
         </tr>
       </thead>
       <tbody class="table-body-event">
-
+        <tr>
+          <td colspan="3" class="text-center bg-white py-4"> Tidak ada acara! Pilih tanggal Terlebih Dahulu </td>
+        </tr>
       </tbody>
     </table>
   </div>
@@ -154,6 +156,11 @@
           },
           success: function(events) {
             $('.table-body-event').empty();
+            if (events.length === 0) {
+              $('.table-body-event').html(
+                '<tr><td colspan = "3"class = "text-center py-4" > Tidak ada acara! Input Tanggal dan Lihat Jadwal </td> </tr>'
+              );
+            }
             $.each(events, function(index, event) {
               let row = $('<tr>').addClass(
                 'bg-white border-t border-gray-300 hover:bg-gray-100'
