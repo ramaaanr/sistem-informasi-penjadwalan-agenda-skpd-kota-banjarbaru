@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Whatsapp;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\ValidationException;
 
 class WhatsappController extends Controller
 {
@@ -13,8 +16,8 @@ class WhatsappController extends Controller
      */
     public function index()
     {
-        $nomors = Whatsapp::all();
-        return view('pages.whatsapp', compact('nomors'));
+        $listNomor = Whatsapp::all();
+        return view('pages.whatsapp', ['listNomor' => $listNomor]);
     }
 
     /**
@@ -22,23 +25,36 @@ class WhatsappController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'nomor_telepon' => 'required',
-        ]);
+        try {
+            $request->validate([
+                'nomor_telepon' => ['required', 'regex:/^(^\+62|62|^08)(\d{3,4}-?){2}\d{3,4}$/'],
+            ]);
+            Whatsapp::create([
+                'nomor_telepon' => $request->input('nomor_telepon'),
+            ]);
+            Session::flash('success', ['title' => 'Tambah Kontak', 'message' => 'Data Berhasil Dimasukkan']);
+        } catch (ValidationException $th) {
+            Session::flash('error', ['title' => 'Tambah Kontak', 'message' => "Format Nomor Tidak Sesuai"]);
+        } catch (QueryException $th) {
+            Session::flash('error', ['title' => 'Tambah Kontak', 'message' => 'Data Gagal Dimasukkan']);
+        }
 
-        Whatsapp::create([
-            'nomor_telepon' => $request->nomor_telepon,
-        ]);
-
-        return redirect()->route('whatsapp.index');
+        return redirect()->back();
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Whatsapp $whatsapp)
+    public function destroy(Request $request)
     {
-        $whatsapp->delete();
-        return redirect()->route('whatsapp.index');
+        try {
+            $id = $request->input('nomor_id');
+            Whatsapp::find($id)->delete();
+            Session::flash('success', ['title' => 'Hapus Kontak', 'message' => 'Data Berhasil Dihapus']);
+        } catch (QueryException $th) {
+            Session::flash('error', ['title' => 'Hapus Kontak', 'message' => 'Data Gagal Dihapus']);
+        }
+
+        return redirect()->back();
     }
 }

@@ -100,7 +100,7 @@ class EventController extends Controller
             ]);
             Session::flash('success', 'Data Berhasil Dimasukkan');
         } catch (QueryException $th) {
-            Session::flash('error', 'Data Gagal Dimasukkan: ' + $th);
+            Session::flash('error', 'Data Gagal Dimasukkan');
         }
 
         return redirect()->back();

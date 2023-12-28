@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WhatsappController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,6 +21,13 @@ Route::get('/', function () {
     if (session()->get('user') == null) return redirect()->route('form-login');
     // Jika sudah pernah login maka akan diarahkan ke route halaman utama aplikasi
     return redirect()->route('home');
+});
+
+
+Route::controller(WhatsappController::class)->group(function () {
+    Route::get('/whatsapp', 'index')->name('whatsapp.index');
+    Route::post('/whatsapp', 'store')->name('whatsapp.store');
+    Route::post('/whatsapp/delete_whatsapp', 'destroy')->name('whatsapp.destroy');
 });
 
 // Route yang menggunakan controller untuk mengelola Fitur Agenda Acara
