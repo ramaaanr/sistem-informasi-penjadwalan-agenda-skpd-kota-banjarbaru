@@ -35,6 +35,7 @@
 </main>
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js'></script>
 <script>
+  // Buat komponen detail button
   function createDetailButton(eventId) {
     let button = $('<button>', {
       text: 'Detail',
@@ -76,6 +77,7 @@
     return button;
   }
 
+  // Buat komponen edit button
   function createEditButton(eventId) {
     let button = $('<button>', {
       text: 'Edit',
@@ -88,6 +90,7 @@
     return button;
   }
 
+  // Buat komponen delete button
   function createDeleteButton(eventId) {
     let button = $('<button>', {
       text: 'Hapus',
@@ -161,6 +164,7 @@
                 '<tr><td colspan = "3"class = "text-center py-4" > Tidak ada acara! Input Tanggal dan Lihat Jadwal </td> </tr>'
               );
             }
+            // Berdasarkan jumlah agenda acara dibuat baris tabel
             $.each(events, function(index, event) {
               let row = $('<tr>').addClass(
                 'bg-white border-t border-gray-300 hover:bg-gray-100'

@@ -5,20 +5,33 @@
   <div class="card-date-range rounded-md bg-white shadow-lg my-4 p-8">
     <div id="input-date-container" class="input-date-container flex">
       <div class="relative mr-4  w-full">
-        <input type="date" id="mulaiTanggal" class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" name="mulai_tanggal" required>
-        <label for="floating_keterangan" class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">Mulai
+        <input type="date" id="mulaiTanggal" class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 
+        bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 
+        dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" name="mulai_tanggal" required>
+        <label for="floating_keterangan" class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform 
+        -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600
+         peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 
+         peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 
+         rtl:peer-focus:left-auto start-1">Mulai
           Tanggal
         </label>
       </div>
       <div class="relative w-full">
-        <input type="date" id="sampaiTanggal" class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" name="sampai_tanggal" required>
-        <label for="floating_keterangan" class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">Sampai
+        <input type="date" id="sampaiTanggal" class="block px-2.5 pb-2.5 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg 
+        border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none 
+        focus:ring-0 focus:border-blue-600 peer" name="sampai_tanggal" required>
+        <label for="floating_keterangan" class="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 
+        scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 
+        peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2
+         peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">Sampai
           Tanggal
         </label>
       </div>
     </div>
     <div id="button-event-container" class="button-container mt-4">
-      <button type="button" id="lihatAcaraButton" class="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Lihat
+      <button type="button" id="lihatAcaraButton" class="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white 
+      rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 
+      dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Lihat
         Acara</button>
     </div>
   </div>
@@ -51,7 +64,7 @@
   function createCetakAcaraButton(mulaiTanggal, sampaiTanggal) {
     let button = $('<button>', {
       text: 'Cetak Acara',
-      class: 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800',
+      class: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800",
       id: 'cetakAcaraButton',
       click: function() {
         window.location.href = `/print-pdf/unduh?mulai_tanggal=${mulaiTanggal}&sampai_tanggal=${sampaiTanggal}`;

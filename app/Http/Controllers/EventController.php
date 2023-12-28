@@ -12,6 +12,7 @@ use PDF;
 
 class EventController extends Controller
 {
+    // fungsi controller untuk menampilkan halaman utama
     public function showCalendar(Request $request)
     {
         $events = Event::select(['title', 'start_event', 'end_event'])->get();
@@ -26,6 +27,28 @@ class EventController extends Controller
         return view('pages.index', ['events' => $results]);
     }
 
+    // fungsi controller untuk mengembalikan nilai detail acara berdasarkan id acara
+    public function getDetailEvent(Request $request)
+    {
+        $id = $request->input('id');
+        // Lakukan logika untuk mengambil detail event dari database atau sumber lainnya
+        // Contoh sederhana: hanya mengembalikan ID event
+        $detailEvent = Event::find($id);
+        $tanggal = Carbon::parse($detailEvent->start_event);
+        $tanggal->locale('id');
+        return response()->json([
+            'id' => $detailEvent->id,
+            'title' => $detailEvent->title,
+            'tempat' => $detailEvent->tempat,
+            'dihadiri' => $detailEvent->dihadiri,
+            'pakaian' => $detailEvent->pakaian,
+            'keterangan' => $detailEvent->keterangan,
+            'tanggal' => $tanggal->isoFormat('dddd, D MMMM YYYY'),
+            'waktu' => $tanggal->isoFormat('h:m'),
+        ]);
+    }
+
+    // fungsi controller untuk mengembalikan nilai kumpulan acara berdasarkan tanggal
     public function getEventsByDate(Request $request)
     {
         $date = $request->input('date');
@@ -49,31 +72,21 @@ class EventController extends Controller
         return response()->json($results);
     }
 
-    public function getDetailEvent(Request $request)
+    // Fungsi Contoller untuk menghapus event berdarkan query parameter id
+    public function deleteEvent(Request $request)
     {
-        $id = $request->input('id');
-        // Lakukan logika untuk mengambil detail event dari database atau sumber lainnya
-        // Contoh sederhana: hanya mengembalikan ID event
-        $detailEvent = Event::find($id);
-        $tanggal = Carbon::parse($detailEvent->start_event);
-        $tanggal->locale('id');
-        return response()->json([
-            'id' => $detailEvent->id,
-            'title' => $detailEvent->title,
-            'tempat' => $detailEvent->tempat,
-            'dihadiri' => $detailEvent->dihadiri,
-            'pakaian' => $detailEvent->pakaian,
-            'keterangan' => $detailEvent->keterangan,
-            'tanggal' => $tanggal->isoFormat('dddd, D MMMM YYYY'),
-            'waktu' => $tanggal->isoFormat('h:m'),
-        ]);
+        $id = $request->query('id');
+        Event::find($id)->delete();
+        return response()->json(['message' => 'Event deleted successfully']);
     }
 
+    // untuk menampilkan form untuk menambah acara
     public function showFormAddEvent(Request $request)
     {
         return view('pages.store_event');
     }
 
+    // untuk mengelola ketika acara ditambahkan
     public function storeEvent(Request $request)
     {
         try {
@@ -92,6 +105,9 @@ class EventController extends Controller
 
         return redirect()->back();
     }
+
+
+    // untuk menampilkan form untuk melakukan edit acara
     public function showFormEditEvent(Request $request)
     {
         $id = $request->query('id');
@@ -115,7 +131,7 @@ class EventController extends Controller
             abort(404);
         }
     }
-
+    // untuk mengelola ketika acara di ubah atau edit
     public function editEvent(Request $request)
     {
         $id = $request->query('id');
@@ -136,19 +152,14 @@ class EventController extends Controller
 
         return redirect()->back();
     }
-    public function deleteEvent(Request $request)
-    {
-        $id = $request->query('id');
 
-        Event::find($id)->delete();
-        return response()->json(['message' => 'Event deleted successfully']);
-    }
-
+    // Tampilkan halaman print pdf 
     public function showPrintPdf(Request $request)
     {
         return view('pages.print_pdf');
     }
 
+    // Kembalikan acara dari antara dua tanggal inputan
     public function getEventByDateRange(Request $request)
     {
         try {
@@ -186,10 +197,10 @@ class EventController extends Controller
         }
     }
 
+    // Menampilkan preview cetak pdf
     public function downloadPdf(Request $request)
     {
         try {
-            set_time_limit(500);
             // Mengonversi string tanggal menjadi objek Carbon
             $mulaiTanggal = Carbon::createFromFormat('Y-m-d', $request->query('mulai_tanggal'));
             $sampaiTanggal = Carbon::createFromFormat('Y-m-d', $request->query('sampai_tanggal'));
