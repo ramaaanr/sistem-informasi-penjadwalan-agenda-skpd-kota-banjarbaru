@@ -3,6 +3,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Event;
 use Illuminate\Http\Request;
 use App\Models\Whatsapp;
 use Illuminate\Database\QueryException;
@@ -56,5 +57,25 @@ class WhatsappController extends Controller
         }
 
         return redirect()->back();
+    }
+
+    public function sendEventToWhatsapp(Request $request)
+    {
+        $tanggal = $request->input('tanggal');
+        try {
+            $events = Event::whereDate('start_event', $tanggal)->get();
+            $contacts = Whatsapp::all();
+            $results = array();
+            foreach ($contacts as $contact) {
+                $results[] = [
+                    'no_whatsapp' => $contact,
+                    'acara' => $events,
+                ];
+            }
+
+            return response()->json($results);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => true, 'message' => $th->getMessage()], 500);
+        }
     }
 }

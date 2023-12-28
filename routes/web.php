@@ -28,6 +28,7 @@ Route::controller(WhatsappController::class)->group(function () {
     Route::get('/whatsapp', 'index')->name('whatsapp.index');
     Route::post('/whatsapp', 'store')->name('whatsapp.store');
     Route::post('/whatsapp/delete_whatsapp', 'destroy')->name('whatsapp.destroy');
+    Route::post('/whatsapp/send-event-to-whatsapp', 'sendEventToWhatsapp');
 });
 
 // Route yang menggunakan controller untuk mengelola Fitur Agenda Acara

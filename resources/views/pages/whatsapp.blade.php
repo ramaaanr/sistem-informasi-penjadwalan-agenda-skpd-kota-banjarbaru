@@ -79,35 +79,10 @@
 </main>
 
 <script>
-  // function appendTableRow(nomor) {
-  //   let tableBody = $('.table-body-event');
-  //   let row = $('<tr>').addClass(
-  //     'bg-white border-t border-gray-300 hover:bg-gray-100'
-  //   );
-  //   $('<td>').addClass('px-6 py-4').text(tableBody.children().length + 1)
-  //     .appendTo(row);
-  //   $('<td>').addClass('px-6 py-4').text(nomor)
-  //     .appendTo(row);
-  //   row.append(createHapusButton());
-  //   tableBody.append(row);
-  // }
-
   function batalSimpan() {
     // Clear input jika batal
     $('#nomor_telepon').val('');
   }
-
-  // function createHapusButton() {
-  //   let button = $('<button>', {
-  //     text: 'Hapus',
-  //     class: 'text-red-700 mt-2 mr-2 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-2 py-1 text-center ',
-  //     click: function() {
-  //       // Hapus baris saat tombol Hapus ditekan
-  //       $(this).closest('tr').remove();
-  //     }
-  //   });
-  //   return button;
-  // }
 </script>
 
 
