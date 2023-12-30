@@ -58,15 +58,15 @@
           }
         })
         $.ajax({
-          url: '/whatsapp/send-event-to-whatsapp',
-          type: 'POST',
+          url: '/whatsapp/get-formated-events',
+          type: 'GET',
           data: {
             tanggal: tanggal,
             '_token': $('meta[name="csrf-token"]').attr('content')
           },
           success: function(response) {
             Swal.close();
-            console.info(response);
+            console.info(response.content);
             Swal.fire({
               icon: 'success',
               title: 'Kirim Ke Whatsapp',

@@ -15,6 +15,8 @@ class EventController extends Controller
     // fungsi controller untuk menampilkan halaman utama
     public function showCalendar(Request $request)
     {
+        if (session()->get('user') == null) return redirect()->route('form-login');
+
         $events = Event::select(['title', 'start_event', 'end_event'])->get();
         $results = array();
         foreach ($events as $event) {

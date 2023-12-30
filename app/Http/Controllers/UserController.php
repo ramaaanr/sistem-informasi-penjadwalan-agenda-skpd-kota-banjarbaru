@@ -43,4 +43,11 @@ class UserController extends Controller
         if (session()->get('user') != null) return redirect()->route('home');
         return view('pages.login');
     }
+
+    // Fungsi untuk memproses log out
+    public function doLogout(Request $request)
+    {
+        $request->session()->forget('user');
+        return redirect()->route('form-login');
+    }
 }

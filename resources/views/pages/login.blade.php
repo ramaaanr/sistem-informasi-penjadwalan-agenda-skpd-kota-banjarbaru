@@ -10,7 +10,8 @@ Swal.fire({
 });
 </script>
 @endif
-<div class="form-container bg-gray-100 flex flex-wrap content-center justify-center w-screen h-screen">
+<div class="form-container flex flex-wrap content-center justify-center w-screen h-screen"
+  style="background-image: url('images/login-bg.jpg')">
   <form class="bg-white rounded-md shadow-lg p-8 flex flex-col w-fit h-fit" method="post" action="/login">
     @csrf
     <h1 class="font-bold text-center text-2xl mb-4 text-blue-400">Login</h1>

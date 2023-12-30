@@ -15,21 +15,24 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
 // Route Untuk Ke halaman utama
-Route::get('/', function () {
-    // Jika belum pernah login maka akan diarahkan ke route halaman login
-    if (session()->get('user') == null) return redirect()->route('form-login');
-    // Jika sudah pernah login maka akan diarahkan ke route halaman utama aplikasi
-    return redirect()->route('home');
-});
+// Route::get('/', function () {
+//     // Jika belum pernah login maka akan diarahkan ke route halaman login
+//     dd(session()->get('user'));
+//     if (session()->get('user') == null) return redirect()->route('form-login');
+//     // Jika sudah pernah login maka akan diarahkan ke route halaman utama aplikasi
+//     return redirect()->route('home');
+// });
 
 
 Route::controller(WhatsappController::class)->group(function () {
     Route::get('/whatsapp', 'index')->name('whatsapp.index');
     Route::post('/whatsapp', 'store')->name('whatsapp.store');
     Route::post('/whatsapp/delete_whatsapp', 'destroy')->name('whatsapp.destroy');
-    Route::post('/whatsapp/send-event-to-whatsapp', 'sendEventToWhatsapp');
+    Route::get('/whatsapp/get-formated-events', 'getFormatedEvents');
 });
+
 
 // Route yang menggunakan controller untuk mengelola Fitur Agenda Acara
 Route::controller(EventController::class)->group(function () {
@@ -66,4 +69,6 @@ Route::controller(UserController::class)->group(function () {
     Route::post('/login', 'doLogin')->name('do-login');
     // Route untuk menampilkan halaman login
     Route::get('/login', 'formLogin')->name('form-login');
+    // Route untuk memproses logouot
+    Route::get('/logout', 'doLogout')->name('do-logout');
 });

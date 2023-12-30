@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use Illuminate\Http\Request;
 use App\Models\Whatsapp;
+use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
@@ -59,23 +60,43 @@ class WhatsappController extends Controller
         return redirect()->back();
     }
 
-    public function sendEventToWhatsapp(Request $request)
+    public function getFormatedEvents(Request $request)
     {
-        $tanggal = $request->input('tanggal');
+
         try {
+            // $results = array();
+            // foreach ($contacts as $contact) {
+            //     $results[] = [
+            //         'no_whatsapp' => $contact,
+            //         'acara' => $events,
+            //     ];
+            // }
+
+            $contacts = Whatsapp::pluck('nomor_telepon')->toArray();
+            $tanggal = $request->input('tanggal');
+            $headerContent = "Assalamualaikum W. W.\nMohon izin Bapak Ibu Asisten, Staf Ahli Wali kota, Pimpinan SKPD, Sekretaris DPRD, Para Kabag, Camat dan Lurah. Izin info giat pimpinan dan arahan Wali Kota Banjarbaru.\n";
+            $footerContent = "\nTerima kasih.\nWassalamualaikum W. W.";
+            $mainContent = "";
             $events = Event::whereDate('start_event', $tanggal)->get();
-            $contacts = Whatsapp::all();
-            $results = array();
-            foreach ($contacts as $contact) {
-                $results[] = [
-                    'no_whatsapp' => $contact,
-                    'acara' => $events,
-                ];
+            $date = Carbon::parse($events[0]->start_event);
+            $date->locale('id');
+            $formatedDate = $date->isoFormat('dddd, D MMMM YYYY');
+            $mainContent  = "$formatedDate.\n\n";
+            foreach ($events as $index => $event) {
+                $eventDate = Carbon::parse($event->start_event);
+                $eventDate->locale('id');
+                $formatedTime = $eventDate->isoFormat('h:m');
+                $number = $index + 1;
+                $mainContent = $mainContent . "\n$number. Acara *$event->title*\n- Pukul: $formatedTime WITA\n- Dihadiri: *$event->dihadiri*\n- Pakaian: $event->pakaian\n- Keterangan: $event->keterangan\n";
             }
 
-            return response()->json($results);
+            $dataResults = [
+                'wa_numbers' => $contacts,
+                'content' => $headerContent . $mainContent . $footerContent,
+            ];
+            return response()->json($dataResults);
         } catch (\Throwable $th) {
-            return response()->json(['error' => true, 'message' => $th->getMessage()], 500);
+            return response()->json(['error' => true, 'message' => $th->getLine()], 500);
         }
     }
 }
