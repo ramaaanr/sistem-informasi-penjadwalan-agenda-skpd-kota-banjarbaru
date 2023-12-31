@@ -64,35 +64,29 @@ class WhatsappController extends Controller
     {
 
         try {
-            // $results = array();
-            // foreach ($contacts as $contact) {
-            //     $results[] = [
-            //         'no_whatsapp' => $contact,
-            //         'acara' => $events,
-            //     ];
-            // }
-
+            $date = $request->input('tanggal');
             $contacts = Whatsapp::pluck('nomor_telepon')->toArray();
-            $tanggal = $request->input('tanggal');
-            $headerContent = "Assalamualaikum W. W.\nMohon izin Bapak Ibu Asisten, Staf Ahli Wali kota, Pimpinan SKPD, Sekretaris DPRD, Para Kabag, Camat dan Lurah. Izin info giat pimpinan dan arahan Wali Kota Banjarbaru.\n";
-            $footerContent = "\nTerima kasih.\nWassalamualaikum W. W.";
-            $mainContent = "";
-            $events = Event::whereDate('start_event', $tanggal)->get();
-            $date = Carbon::parse($events[0]->start_event);
-            $date->locale('id');
-            $formatedDate = $date->isoFormat('dddd, D MMMM YYYY');
-            $mainContent  = "$formatedDate.\n\n";
+            $events = Event::whereDate('start_event', $date)->get();
+            $eventResults = array();
             foreach ($events as $index => $event) {
                 $eventDate = Carbon::parse($event->start_event);
-                $eventDate->locale('id');
-                $formatedTime = $eventDate->isoFormat('h:m');
-                $number = $index + 1;
-                $mainContent = $mainContent . "\n$number. Acara *$event->title*\n- Pukul: $formatedTime WITA\n- Dihadiri: *$event->dihadiri*\n- Pakaian: $event->pakaian\n- Keterangan: $event->keterangan\n";
+                $eventDate->setLocale('id');
+                $eventTime = $eventDate->isoFormat('h:m');
+                $eventNumber = $index + 1;
+                $eventResults[] = [
+                    "var_tanggal" => $eventDate->isoFormat('dddd, D MMMM YYYY'),
+                    "var_agenda" => $eventNumber,
+                    "var_pukul" => "$eventTime WITA. Di $event->tempat.",
+                    "var_acara" => $event->title,
+                    "var_dihadiri" => "*$event->dihadiri*",
+                    "var_pakaian" => $event->pakaian,
+                    "var_keterangan" => $event->keterangan
+                ];
             }
 
             $dataResults = [
                 'wa_numbers' => $contacts,
-                'content' => $headerContent . $mainContent . $footerContent,
+                'events' => $eventResults,
             ];
             return response()->json($dataResults);
         } catch (\Throwable $th) {
